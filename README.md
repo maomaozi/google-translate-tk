@@ -15,5 +15,5 @@ tk = tkutils.get_tk("hello", tkk)
 ```
 
 ### Thanks
-* https://github.com/kyai/google-translate-tk/blob/master/tkk.go
+* https://github.com/kyai/google-translate-tk
 
