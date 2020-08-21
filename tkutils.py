@@ -29,55 +29,25 @@ def calc_r(magic_token, magic_str):
     return magic_token
 
 
-def asc_ii(s):
-    return [ord(i) for i in s]
-
-
-def fill(lst, index, value):
-    while True:
-        if len(lst) > index:
-            break
-        lst.append(0)
-    lst[index] = value
-    return lst
-
-
 def get_tk(s, tkk):
-    asc_lst = asc_ii(s)
-    encoded_lst = []
-
-    i = 0
-    while i < len(asc_lst):
-        current = asc_lst[i]
-        if 128 > current:
-            encoded_lst.append(current)
-        elif 2048 > current:
-            encoded_lst.append(current >> 6 | 192)
-        elif 55296 == (current & 64512) and i + 1 < len(asc_lst) and 56320 == int(asc_lst[i + 1]) & 64512:
-            i += 1
-            current = 65536 + fixedint.UInt32((current & 1023) << 10) + (asc_lst[i] & 1023)
-            encoded_lst.append(current >> 18 | 240)
-            encoded_lst.append(current >> 12 & 63 | 128)
-        else:
-            encoded_lst.append(current >> 12 | 224)
-            encoded_lst.append(current >> 6 & 63 | 128)
-            encoded_lst.append(current & 63 | 128)
-        i += 1
-
+    utf8_lst = [i for i in s.encode('utf-8')]
     tkk_p1, tkk_p2 = map(int, tkk.split('.'))
 
     result = tkk_p1
-    for i in range(len(encoded_lst)):
-        result += encoded_lst[i]
+    for item in utf8_lst:
+        result += item
         result = calc_r(result, "+-a^+6")
 
-    result = calc_r(result, "+-3^+b+-f")
-    result ^= tkk_p2
-    result %= 1E6
+    result = (calc_r(result, "+-3^+b+-f") ^ tkk_p2) % 1E6
 
     return "%d.%d" % (result, result ^ tkk_p1)
 
 
 if __name__ == '__main__':
-    tkk = get_tkk()
-    print(get_tk("hello", tkk))
+    # tkk = get_tkk()
+    # print(get_tk("hello", tkk))
+    print(get_tk('Л', "443872.1304485424"))
+    # print(ru(1315921168, "+-3^+b+-f"))
+    # print(calc_r(1315921168, "+-3^+b+-f"))
+    # ru(1315921168, "+-3^+b+-f")
+    # ru(444080, "+-3^+b+-f")
